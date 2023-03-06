@@ -1,5 +1,4 @@
 import os
-import json
 import boto3
 import pandas as pd    
 from datetime import date
@@ -47,14 +46,15 @@ def extract_living_wage_table(county, url):
 		df['wage_level'] = df['wage_level'].apply(lambda x: x[:x.index('Wage')].upper())
 		df['usd_amount'] = df['usd_amount'].apply(lambda x: x[x.index('$')+1:])
 		df['num_children'] = df['num_children'].apply(lambda x: x[:x.index('Child')])
+		df['county'] = ' '.join(county.split('_')).upper()
 		result = pd.concat([result, df])
 	return result
 
 def main():
 	counties_urls = {
-		'kent_county': 'https://livingwage.mit.edu/counties/10001',
-		'new_castle_county': 'https://livingwage.mit.edu/counties/10003',
-		'sussex_county': 'https://livingwage.mit.edu/counties/10005'
+		'kent': 'https://livingwage.mit.edu/counties/10001',
+		'new_castle': 'https://livingwage.mit.edu/counties/10003',
+		'sussex': 'https://livingwage.mit.edu/counties/10005'
 	}
 	all_tables = []
 	for k, v in counties_urls.items():
