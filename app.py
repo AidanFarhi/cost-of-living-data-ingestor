@@ -77,6 +77,18 @@ def extract_living_wage_table(county, url):
 		result = pd.concat([result, df])
 	return result
 
+def extract_typical_salaries(county, url):
+	tables = pd.read_html(url)
+	typical_salaries = tables[2]
+	typical_salaries = typical_salaries.rename(
+		columns={'Occupational Area': 'occupational_area', 'Typical Annual Salary': 'typical_annual_salary'}
+	)
+	typical_salaries['typical_annual_salary'] = typical_salaries['typical_annual_salary'].apply(lambda x: x[x.index('$')+1:])
+	typical_salaries['typical_annual_salary'] = typical_salaries['typical_annual_salary'].apply(lambda x: x.replace(',', ''))
+	typical_salaries['occupational_area'] = typical_salaries['occupational_area'].apply(str.upper)
+	typical_salaries['county'] = ' '.join(county.split('_')).upper()
+	return typical_salaries
+
 def main():
 	counties_urls = {
 		'kent': 'https://livingwage.mit.edu/counties/10001',
@@ -92,6 +104,10 @@ def main():
 		all_tables.append({
 			'table': f'{county}_expenses',
 			'df': extract_expenses_table(county, url)
+		})
+		all_tables.append({
+			'table': f'{county}_typical_salaries',
+			'df': extract_typical_salaries(county, url)
 		})
 	for obj in all_tables:
 		load_df_to_s3(obj)
