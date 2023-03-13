@@ -89,7 +89,7 @@ def extract_typical_salaries(county, url):
 	typical_salaries['county'] = ' '.join(county.split('_')).upper()
 	return typical_salaries
 
-def main():
+def main(event, context):
 	counties_urls = {
 		'kent': 'https://livingwage.mit.edu/counties/10001',
 		'new_castle': 'https://livingwage.mit.edu/counties/10003',
@@ -111,7 +111,8 @@ def main():
 		})
 	for obj in all_tables:
 		load_df_to_s3(obj)
+	return {'statusCode': 200}
 
 
 if __name__ == '__main__':
-    main()
+    main(None, None)
