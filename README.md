@@ -1,4 +1,4 @@
-## This script scrapes cost of living data from the MIT Living Wage Calculator website and loads it to an S3 bucket.
+## This script scrapes cost of living data from the MIT Living Wage Calculator website and loads it to a S3 data lake.
 
 #### To run locally
 
